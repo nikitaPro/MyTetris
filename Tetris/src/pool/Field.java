@@ -2,12 +2,13 @@ package pool;
 
 import javax.swing.Timer;
 
-public interface Field {
+public interface Field <T>{
 	public Timer letsGo();
 	public Timer pause();
-	public Object getField();
+	public T getField();
 	public void right();
 	public void left();
 	public void go();
 	public void up();
+	public void down();
 }

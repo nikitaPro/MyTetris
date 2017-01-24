@@ -10,7 +10,7 @@ import javax.swing.JFrame;
 
 import frames.MainFrame;
 import snake.pool.SnakeField;
-import strikePool.StrikeField;
+import strike.pool.StrikeField;
 import tetrisPool.TetrisField;
 
 /**

@@ -26,6 +26,7 @@ import javax.swing.Timer;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import pool.Field;
 import resources.AllImage;
 import resources.AllSounds;
 import square.Member;
@@ -33,11 +34,11 @@ import main.Main;
 
 public abstract class GamesFrame extends JFrame{
 	private static final long serialVersionUID = 1L;
-	/**–азмер €чейки*/
+	/**Size of cell*/
 	protected int coubSize = 10;
-	/**¬нутренний размер €чейки*/
+	/**Inner size of cell*/
 	protected int coubSizeInner = 6;
-	/**Hассто€ние от внешнего кра€ €чейки до кра€ внутреннего */
+	/**Distance between external side of cell and internal side of cell */
 	protected int coubStep = 2;
 	protected JPanel contentPanel =null;
 	protected Icon slide=AllImage.PICI[0];
@@ -64,13 +65,13 @@ public abstract class GamesFrame extends JFrame{
 		return this.pause;
 	}
 	
-	public GamesFrame(int fieldWidth, int fieldHeight) {
+	public GamesFrame(int fieldWidth, int fieldHeight,Field<Member [][]> field) {
 		setResizable(false);
 		this.setJMenuBar(getMenuBar_1());
 		this.setContentPane(getPanel());
-		int scrH=Main.screenSize.height; // высота экрана
-		this.fieldHeight=fieldHeight;//высота пол€ в €чейках
-		this.fieldWidth=fieldWidth;// ширина пол€ в €чейках
+		int scrH=Main.screenSize.height; 
+		this.fieldHeight=fieldHeight;//Height of field (count of cell)
+		this.fieldWidth=fieldWidth;// Width of field (count of cell)
 		coubSize =scrH/ fieldHeight-(heightConst/fieldHeight+2); 
 		if(coubSize%2==1) coubSize+=1;
 		coubSizeInner =coubSize-coubSize*45/100; 
@@ -83,6 +84,23 @@ public abstract class GamesFrame extends JFrame{
 			public void keyPressed(KeyEvent e) {
 				int code = e.getKeyCode();
 				switch(code){
+				case KeyEvent.VK_RIGHT:
+					if(!isPause())
+						field.right();
+					break;
+				case KeyEvent.VK_LEFT:
+					if(!isPause()){
+						field.left();
+					}
+					break;
+				case KeyEvent.VK_DOWN:
+					if(!isPause())
+						field.down();
+					break;
+				case KeyEvent.VK_UP:
+					if(!isPause())
+						field.up();
+					break;
 				case KeyEvent.VK_DIVIDE:
 					if(pici=!pici)
 						slideShow().start();

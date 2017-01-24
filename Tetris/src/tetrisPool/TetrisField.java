@@ -17,16 +17,18 @@ import javax.swing.JOptionPane;
 import javax.swing.Timer;
 
 import pool.Field;
+import square.BorderSquare;
 import square.Figure;
+import square.Member;
 import square.Square;
 
 /**
  * @author NikitaNB
  *
  */
-public class TetrisField implements Field {
+public class TetrisField implements Field<Member [][]> {
 	
-	protected boolean[][] field = null;
+	protected Member [][] field = null;
 	private int column = 20;
 	private int startPosition=0;
 	private int line = 30;
@@ -49,14 +51,14 @@ public class TetrisField implements Field {
 		init();
 	}
 	private void init(){
-		field = new boolean[column][line];
+		field = new Member[column][line];
 		for(int i=0;i<line;i++){
-			field[column-1][i]=true;
-			field[0][i]=true;
+			field[column-1][i]= new BorderSquare(column-1,i);
+			field[0][i]= new BorderSquare(0,i);
 		}
 		for(int i=0;i<column;i++){
-			field[i][line-1]=true;
-			field[i][0]=true;
+			field[i][line-1]= new BorderSquare(i,line-1);
+			field[i][0]=new BorderSquare(i,0);
 		}
 
 		createFigure();
@@ -73,7 +75,7 @@ public class TetrisField implements Field {
 	public Timer letsGo(){
 		timer.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent e) {
-				go();
+				down();
 			}
 		});
 		timer.start();
@@ -97,7 +99,7 @@ public class TetrisField implements Field {
 		int absX=current.getX();
 		int absY=current.getY();
 		for(int i =0;i<fig.length;i++)
-			field[absX+fig[i].getX()][absY+fig[i].getY()]=false;
+			field[absX+fig[i].getX()][absY+fig[i].getY()]=null;
 	}
 	private void insBits(){
 		Square fig[];
@@ -105,10 +107,9 @@ public class TetrisField implements Field {
 		int absX=current.getX();
 		int absY=current.getY();
 		for(int i =0;i<fig.length;i++)
-			field[absX+fig[i].getX()][absY+fig[i].getY()]=true;
+			field[absX+fig[i].getX()][absY+fig[i].getY()]=new Square(absX+fig[i].getX(),absY+fig[i].getY());
 	}
-	private boolean autoStop()
-	{
+	private boolean autoStop(){
 		if(!autoStopDown()){
 			checkGameOver();
 			checkLine();
@@ -118,55 +119,53 @@ public class TetrisField implements Field {
 		return true;
 	}
 	private boolean autoStopDown(){
-		boolean[][] bits= current.getBitField();
+		Member [][] bits= current.getBitField();
 		int absX=current.getX();
 		int absY=current.getY();
 		for(int i=0;i<bits[0].length;i++)
 			for(int j=0;j<bits.length;j++)
-				if(bits[j][i]){
+				if(bits[j][i]!=null){
 					try{
-						if(bits[j][i+1]) continue;
-						else if(field[absX+j][absY+i+1]){
+						if(bits[j][i+1]!=null) continue;
+						else if(field[absX+j][absY+i+1]!=null){
 							return false;
 						}
 					}catch (ArrayIndexOutOfBoundsException e){
-						if(field[absX+j][absY+i+1]){
+						if(field[absX+j][absY+i+1]!=null){
 							return false;
 						}
 					}
 				}
 		return true;
 	}
-	private boolean autoStopLeft()
-	{
-		boolean[][] bits= current.getBitField();
+	private boolean autoStopLeft(){
+		Member [][] bits= current.getBitField();
 		int absX=current.getX();
 		int absY=current.getY();
 		for(int i=0;i<bits[0].length;i++)
 			for(int j=0;j<bits.length;j++)
-				if(bits[j][i]){
+				if(bits[j][i]!=null){
 					try{
-					if(bits[j-1][i]) continue;
-					else if(field[absX+j-1][absY+i])return false;
+					if(bits[j-1][i]!=null) continue;
+					else if(field[absX+j-1][absY+i]!=null)return false;
 					}catch (ArrayIndexOutOfBoundsException e){
-						if(field[absX+j-1][absY+i])return false;
+						if(field[absX+j-1][absY+i]!=null)return false;
 					}
 				}
 		return true;
 	}
-	private boolean autoStopRight()
-	{
-		boolean[][] bits= current.getBitField();
+	private boolean autoStopRight(){
+		Member [][] bits= current.getBitField();
 		int absX=current.getX();
 		int absY=current.getY();
 		for(int i=0;i<bits[0].length;i++)
 			for(int j=0;j<bits.length;j++)
-				if(bits[j][i]){
+				if(bits[j][i]!=null){
 					try{
-					if(bits[j+1][i]) continue;
-					else if(field[absX+j+1][absY+i])return false;
+					if(bits[j+1][i]!=null) continue;
+					else if(field[absX+j+1][absY+i]!=null)return false;
 					}catch (ArrayIndexOutOfBoundsException e){
-						if(field[absX+j+1][absY+i])return false;
+						if(field[absX+j+1][absY+i]!=null)return false;
 					}
 				}
 		return true;
@@ -174,7 +173,7 @@ public class TetrisField implements Field {
 	private void test(){
 		for(int i=0;i<line;i++){
 			for(int j=0;j<column;j++){
-				if(field[j][i])
+				if(field[j][i]!=null)
 					System.out.print("1");
 				else
 					System.out.print("0");
@@ -183,7 +182,8 @@ public class TetrisField implements Field {
 		}
 		System.out.println();
 	}
-	public Object getField(){
+	@Override
+	public Member [][] getField(){
 		return field;
 	}
 	public void right(){
@@ -220,11 +220,11 @@ public class TetrisField implements Field {
 	private void rotate(){
 		delBits();
 		current.rotateR();
-		boolean[][] bits = current.getBitField();
+		Member [][] bits = current.getBitField();
 		for(int i=0;i<bits[0].length;i++)
 			for(int j=0;j<bits.length;j++){
-				if(bits[j][i])
-					if(field[j+current.getX()][i+current.getY()]){
+				if(bits[j][i]!=null)
+					if(field[j+current.getX()][i+current.getY()]!=null){
 						current.rotateL();
 						insBits();
 						return;
@@ -239,7 +239,7 @@ public class TetrisField implements Field {
 		for(int i=line-2;i>1;i--){
 			kol=0;
 			for(int j=1;j<column-1;j++)
-				if(field[j][i])kol++;
+				if(field[j][i]!=null)kol++;
 			if(kol==column-2){
 				AllSounds.lineSnd.play(true);
 				for(int t=i;t>1;t--)
@@ -272,7 +272,7 @@ public class TetrisField implements Field {
 			boolean f =false;
 			for(int i=1;i<line-1;i++){
 				for(int j=1;j<column-1;j++)
-					if(field[j][i]){
+					if(field[j][i]!=null){
 						bonus="LINE";
 						foundLine=i;
 						f=true;
@@ -282,8 +282,7 @@ public class TetrisField implements Field {
 			}
 			if(foundLine!=-1)
 				for(int j=1;j<column-1;j++){
-					//System.out.print(field[j][foundLine]);
-					field[j][foundLine]=false;
+					field[j][foundLine]=null;
 				}
 			tm.addActionListener(new ActionListener(){
 				@Override
@@ -312,16 +311,16 @@ public class TetrisField implements Field {
 		}
 	}
 	private void clean(){
-		for(int i=0;i<line-1;i++)
+		for(int i=1;i<line-1;i++)
 			for(int j=1;j<column-1;j++)
-				field[j][i]=false;
+				field[j][i]=null;
 		scoreVal=0;
 
 	}
 	private void checkGameOver(){
 		timer.stop();
 		for(int j=startPosition;j<startPosition+4;j++)
-			if(field[j][1]){
+			if(field[j][1]!=null){
 				if(score.getScore()<100){
 					AllSounds.GOverSnd.play();
 					JOptionPane.showMessageDialog(null, 
@@ -341,5 +340,9 @@ public class TetrisField implements Field {
 				timer=score.resetDiff();
 			}
 		timer.start();  
+	}
+	@Override
+	public void down() {
+		go();
 	}
 }

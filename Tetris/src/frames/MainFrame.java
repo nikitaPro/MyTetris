@@ -54,8 +54,8 @@ public class MainFrame extends JFrame {
 	 * 
 	 */
 	private static final long serialVersionUID = -8453782959588089915L;
-	private int width=450;
-	private int height=350;
+	private int width=460;
+	private int height=520;
 	private Dimension screenSize = Main.screenSize;
 	private JPanel contentPane;
 	private SpringLayout springLayout;
@@ -87,7 +87,7 @@ public class MainFrame extends JFrame {
 	}
 		
 	private void initGUI() {
-		setSize(new Dimension(460, 450));
+		setSize(new Dimension(width, height));
 		this.setIconImage(Toolkit.getDefaultToolkit().getImage(MainFrame.class.getResource("/image/ico.png")));
 		this.setTitle("Tetris games");
 		this.setLocation(screenSize.width/2-width/2, screenSize.height/2-height/2);
@@ -114,10 +114,11 @@ public class MainFrame extends JFrame {
 		contentPane.add(getPanel());
 		contentPane.add(getButton_2());
 		Animation();
-		//contentPane.add(getPanel_1());
+		contentPane.add(getPanel_1());
 		contentPane.add(getPanel_2());
 		contentPane.add(getLabel_3());
 	}
+	/**Panel for Tetris*/
 	private JPanel getPanel() {
 		if (panel == null) {
 			panel = new JPanel(){
@@ -132,7 +133,7 @@ public class MainFrame extends JFrame {
 				}
 			};
 			springLayout.putConstraint(SpringLayout.WEST, panel, 10, SpringLayout.WEST, contentPane);
-			springLayout.putConstraint(SpringLayout.SOUTH, panel, -230, SpringLayout.SOUTH, contentPane);
+			springLayout.putConstraint(SpringLayout.SOUTH, panel, -300, SpringLayout.SOUTH, contentPane);
 			springLayout.putConstraint(SpringLayout.EAST, panel, -10, SpringLayout.EAST, contentPane);
 			panel.setBackground(Color.RED);
 			panel.setFont(new Font("Tahoma", Font.BOLD, 15));
@@ -180,7 +181,7 @@ public class MainFrame extends JFrame {
 		return panel;
 	}
 	/**
-	 * RECORDS
+	 * RECORDS for Tetris
 	 * */
 	private JButton getButton() {
 		if (button == null) {
@@ -196,7 +197,7 @@ public class MainFrame extends JFrame {
 		return button;
 	}
 	/**
-	 * START
+	 * START for Tetris
 	 * */
 	private JButton getButton_1() {
 		if (button_1 == null) {
@@ -274,7 +275,7 @@ public class MainFrame extends JFrame {
 				new String[]{"GO!"},"GO!")==JOptionPane.CLOSED_OPTION) return;
 		
 		MainFrame.this.setVisible(false);//скрыть гл меню
-		TetrisFrame tf = new TetrisFrame(Main.tetrisFld.getField());// передаем окну поле
+		TetrisFrame tf = new TetrisFrame(Main.tetrisFld);// передаем окну поле
 		
 		switch(comboBox_1.getSelectedIndex()){// выбираем сложность 
 		case 0: 
@@ -336,11 +337,10 @@ public class MainFrame extends JFrame {
 	private JPanel getPanel_1() {
 		if (panel_1 == null) {
 			panel_1 = new JPanel();
-			springLayout.putConstraint(SpringLayout.NORTH, panel_1, 26, SpringLayout.SOUTH, getPanel());
-			springLayout.putConstraint(SpringLayout.SOUTH, panel_1, -15, SpringLayout.SOUTH, contentPane);
+			springLayout.putConstraint(SpringLayout.WEST, panel_1, 10, SpringLayout.WEST, contentPane);
+			springLayout.putConstraint(SpringLayout.SOUTH, panel_1, -28, SpringLayout.SOUTH, contentPane);
 			springLayout.putConstraint(SpringLayout.EAST, panel_1, 0, SpringLayout.EAST, getPanel());
 			panel_1.setBorder(new TitledBorder(new CompoundBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null), new BevelBorder(BevelBorder.RAISED, null, null, null, null)), "Strike", TitledBorder.LEADING, TitledBorder.TOP, new Font("Old English Text MT", Font.BOLD | Font.ITALIC, 20), null));
-			springLayout.putConstraint(SpringLayout.WEST, panel_1, 0, SpringLayout.WEST, getPanel());
 			springLayout_1 = new SpringLayout();
 			panel_1.setLayout(springLayout_1);
 			panel_1.add(getButton_3());
@@ -388,14 +388,14 @@ public class MainFrame extends JFrame {
 				new String[]{"GO!"},"GO!")==JOptionPane.CLOSED_OPTION) return;
 		
 		MainFrame.this.setVisible(false);
-		TetrisFrame tf = new TetrisFrame(Main.strikeFld.getField());
+		SnakeFrame sf = new SnakeFrame(Main.strikeFld);
 		
 		final Timer tmr =Main.strikeFld.letsGo();
-		tf.addWindowListener(new WindowAdapter() {
+		sf.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
 				tmr.stop();
-				tf.setVisible(false);
-				tf.dispose();
+				sf.setVisible(false);
+				sf.dispose();
 				MainFrame.this.setVisible(true);
 			}
 		});
@@ -426,9 +426,10 @@ public class MainFrame extends JFrame {
 					scrollEffect(grf,AllImage.BARK,i);
 				}
 			};
-			springLayout.putConstraint(SpringLayout.NORTH, panel_2, 14, SpringLayout.SOUTH, getPanel());
-			springLayout.putConstraint(SpringLayout.WEST, panel_2, 10, SpringLayout.WEST, contentPane);
-			springLayout.putConstraint(SpringLayout.SOUTH, panel_2, -86, SpringLayout.SOUTH, contentPane);
+			springLayout.putConstraint(SpringLayout.NORTH, getPanel_1(), 6, SpringLayout.SOUTH, panel_2);
+			springLayout.putConstraint(SpringLayout.NORTH, panel_2, 6, SpringLayout.SOUTH, getPanel());
+			springLayout.putConstraint(SpringLayout.WEST, panel_2, 0, SpringLayout.WEST, getPanel());
+			springLayout.putConstraint(SpringLayout.SOUTH, panel_2, -164, SpringLayout.SOUTH, contentPane);
 			springLayout.putConstraint(SpringLayout.EAST, panel_2, -10, SpringLayout.EAST, contentPane);
 			panel_2.setBackground(new Color(46, 139, 87));
 			panel_2.setFont(new Font("Tahoma", Font.BOLD, 15));
@@ -524,7 +525,7 @@ public class MainFrame extends JFrame {
 		MainFrame.this.setVisible(false);
 		SnakeField fs =Main.snakeFld;
 		final Timer tmr =fs.letsGo();// запускаем игру
-		SnakeFrame sf = new SnakeFrame(fs.getField());// передаем окну поле
+		SnakeFrame sf = new SnakeFrame(fs);// передаем окну поле
 		sf.setVisible(true);
 		sf.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {

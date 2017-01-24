@@ -98,13 +98,13 @@ private Square figure[]=null;
 	public Square[] getSquares(){
 		return figure;
 	}
-	public boolean[][] getBitField(){
-		boolean[][] bits = new boolean[figure.length][figure.length];
+	public Member[][] getBitField(){
+		Member[][] bits = new Member[figure.length][figure.length];
 		for(int i=0;i<figure.length;i++){
 			for(int j=0;j<figure.length;j++)
-				bits[j][i] = false;
+				bits[j][i] = null;
 			for(int j=0;j<figure.length;j++)
-				bits[figure[j].x][figure[j].y]=true;
+				bits[figure[j].x][figure[j].y]=figure[j];
 		}
 		return bits;
 	}

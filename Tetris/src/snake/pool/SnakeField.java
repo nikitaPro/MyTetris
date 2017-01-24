@@ -3,15 +3,11 @@
  */
 package snake.pool;
 
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.FileNotFoundException;
-import java.util.ArrayList;
 import java.util.Random;
 
 import resources.AllSounds;
-import resources.FileWorker;
 
 import javax.swing.JOptionPane;
 import javax.swing.Timer;
@@ -21,7 +17,7 @@ import snake.body.Apple;
 import snake.body.Head;
 import snake.body.Segment;
 import snake.body.Soft;
-import square.Figure;
+import square.BorderSquare;
 import square.Member;
 import square.Square;
 import tetrisPool.Score;
@@ -30,7 +26,7 @@ import tetrisPool.Score;
  * @author NikitaNB
  *
  */
-public class SnakeField implements Field {
+public class SnakeField implements Field<Member[][] > {
 	
 	protected Member[][] field = null;
 	private int column = 20;
@@ -44,7 +40,8 @@ public class SnakeField implements Field {
 	private int scoreVal=0;
 	private Timer timer ;
 	private Head snake =null;
-	private Toolkit tool = Toolkit.getDefaultToolkit();
+	private int direction;
+	private int currentDir;
 	public SnakeField(){
 		startPositionX=column/2-2;
 		startPositionY=line/2-2;
@@ -67,12 +64,12 @@ public class SnakeField implements Field {
 		setDfficulty(400);
 		field = new Member[column][line];
 		for(int i=0;i<line;i++){
-			field[column-1][i]=new Square(column-1,i);
-			field[0][i]=new Square(0,i);
+			field[column-1][i]=new BorderSquare(column-1,i);
+			field[0][i]=new BorderSquare(0,i);
 		}
 		for(int i=0;i<column;i++){
-			field[i][line-1]=new Square(i,line-1);
-			field[i][0]=new Square(i,0);
+			field[i][line-1]=new BorderSquare(i,line-1);
+			field[i][0]=new BorderSquare(i,0);
 		}
 		createSnake();
 		setOnField(snake);
@@ -105,6 +102,7 @@ public class SnakeField implements Field {
 		if(next!=null)
 			setOnField(next);
 	}
+	@Override
 	public Timer letsGo(){
 		left();
 		deployNewApple();
@@ -116,6 +114,7 @@ public class SnakeField implements Field {
 		go();
 		setOnField(snake);
 	}
+	@Override
 	public Timer pause(){
 		if(timer.isRunning()) timer.stop();
 		else timer.start();
@@ -134,9 +133,11 @@ public class SnakeField implements Field {
 		}
 		System.out.println();
 	}
+	@Override
 	public Member[][] getField(){
 		return field;
 	}
+	@Override
 	public void right(){
 		if(direction==3){
 			crawl();
@@ -145,6 +146,7 @@ public class SnakeField implements Field {
 			direction=3;
 		}
 	}
+	@Override
 	public void left(){
 		if(direction==4){
 			crawl();
@@ -153,6 +155,7 @@ public class SnakeField implements Field {
 			direction=4;
 		}
 	}
+	@Override
 	public void down(){
 		if(direction==2){
 			crawl();
@@ -161,6 +164,7 @@ public class SnakeField implements Field {
 			direction=2;
 		}
 	}
+	@Override
 	public void up(){
 		if(direction==1){
 			crawl();
@@ -169,8 +173,7 @@ public class SnakeField implements Field {
 			direction=1;
 		}
 	}
-	private int direction;
-	private int currentDir;
+	@Override
 	public void go(){
 		AllSounds.Shoroh.play();
 		if(collisionCheck()){ 

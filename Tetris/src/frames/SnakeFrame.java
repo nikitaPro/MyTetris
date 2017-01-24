@@ -28,6 +28,7 @@ import javax.swing.Timer;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import pool.Field;
 import main.Main;
 import resources.AllImage;
 import resources.AllSounds;
@@ -39,13 +40,15 @@ public class SnakeFrame extends GamesFrame {
 	private String pauseStr = "PAUSE";
 	protected Member[][] bitField;
 	
-	public SnakeFrame(Member[][] field) {
-		super(field.length,field[0].length);
+	public SnakeFrame(Field<Member [][]> snakeField) {
+		super(snakeField.getField().length,
+				snakeField.getField()[0].length,
+				snakeField);
 		ColorSet.colorBorder=Color.BLACK;
 		ColorSet.colorFigure=Color.GREEN;
 		ColorSet.colorFieldBorder=Color.MAGENTA;
 		ColorSet.colorApple=Color.RED;
-		bitField = field;
+		bitField = snakeField.getField();
 		this.setTitle("JSnake");
 		this.setVisible(true);
 		contentPanel.setBackground(Color.LIGHT_GRAY);
@@ -54,23 +57,6 @@ public class SnakeFrame extends GamesFrame {
 			public void keyPressed(KeyEvent e) {
 				int code = e.getKeyCode();
 				switch(code){
-				case KeyEvent.VK_RIGHT:
-					if(!isPause())
-						Main.snakeFld.right();
-					break;
-				case KeyEvent.VK_LEFT:
-					if(!isPause()){
-						Main.snakeFld.left();
-					}
-					break;
-				case KeyEvent.VK_DOWN:
-					if(!isPause())
-						Main.snakeFld.down();
-					break;
-				case KeyEvent.VK_UP:
-					if(!isPause())
-						Main.snakeFld.up();
-					break;
 				case KeyEvent.VK_1:
 					contentPanel.setBackground(Color.BLACK);
 					ColorSet.colorBorder=Color.WHITE;
