@@ -45,7 +45,7 @@ public class Element implements Member {
 	}
 	@Override
 	public void insertCell(Graphics2D grf, int x, int y, int cellSize) {
-		Color in = ColorSet.colorFieldBorder;
+		Color in = ColorSet.colorApple;
 		Color out = ColorSet.colorBorder;
 		int cellStep = cellSize*20/100;
 		int cellSizeInner = cellSize-2*cellStep;

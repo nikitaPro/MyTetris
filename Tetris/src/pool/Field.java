@@ -11,4 +11,6 @@ public interface Field <T>{
 	public void go();
 	public void up();
 	public void down();
+	public int getScore();
+	public String getBonusName();
 }

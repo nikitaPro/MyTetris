@@ -10,6 +10,7 @@ public class AllImage {
 	public static final Icon RECORDS=new ImageIcon(AllImage.class.getResource("/image/Records.png"));
 	public static final Icon TETRIS=new ImageIcon(AllImage.class.getResource("/image/Tetris.png"));
 	public static final Icon SNAKE=new ImageIcon(AllImage.class.getResource("/image/Snake.png"));
+	public static final Icon STRIKE=new ImageIcon(AllImage.class.getResource("/image/Strike.png"));
 	public static final Icon BRICK=new ImageIcon(AllImage.class.getResource("/image/brick.jpg"));
 	public static final Icon FIRE=new ImageIcon(AllImage.class.getResource("/image/Bamboo.jpg"));
 	public static final Icon BARK=new ImageIcon(AllImage.class.getResource("/image/Bark.jpg"));

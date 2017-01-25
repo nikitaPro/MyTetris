@@ -39,7 +39,7 @@ public class TetrisField implements Field<Member [][]> {
 	private Figure current =null;
 	private Toolkit tool = Toolkit.getDefaultToolkit();
 	private boolean pause=false;
-	public String bonus = null;
+	private String bonus = null;
 	public TetrisField(){
 		startPosition=column/2-2;
 		init();
@@ -211,6 +211,7 @@ public class TetrisField implements Field<Member [][]> {
 		//autoStop();
 		//test();
 	}
+	@Override
 	public int getScore(){
 		return scoreVal;
 	}
@@ -344,5 +345,9 @@ public class TetrisField implements Field<Member [][]> {
 	@Override
 	public void down() {
 		go();
+	}
+	@Override
+	public String getBonusName() {
+		return bonus;
 	}
 }

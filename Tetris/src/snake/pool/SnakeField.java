@@ -47,7 +47,8 @@ public class SnakeField implements Field<Member[][] > {
 		startPositionY=line/2-2;
 		init();
 	}	
-	public String getBonus() {
+	@Override
+	public String getBonusName() {
 		return this.bonus;
 	}
 	public void resetBonus() {
@@ -190,6 +191,7 @@ public class SnakeField implements Field<Member[][] > {
 		//autoStop();
 		//test();
 	}
+	@Override
 	public int getScore(){
 		return scoreVal;
 	}

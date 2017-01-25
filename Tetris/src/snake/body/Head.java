@@ -56,7 +56,7 @@ public class Head extends Segment {
 		grf.setColor(in);
 		grf.fillOval(x+cellStep, y+cellStep, cellSizeInner, cellSizeInner);	
 		grf.setColor(out);
-		//глаза
+		//eyes
 		if(direction<=2){
 			grf.fillOval(x+cellSize/2-5, y+cellSize/2-2, 4, 4);	
 			grf.fillOval(x+cellSize/2+1, y+cellSize/2-2, 4, 4);	
@@ -65,7 +65,7 @@ public class Head extends Segment {
 			grf.fillOval(x+cellSize/2-2, y+cellSize/2-5, 4, 4);	
 			grf.fillOval(x+cellSize/2-2, y+cellSize/2+1, 4, 4);	
 		}
-		//язык
+		//tongue
 		int x1=x+cellSize/2;
 		int y1=y+cellSize/2;
 		int length = cellSize/3;

@@ -2,6 +2,7 @@ package frames;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
@@ -29,23 +30,13 @@ import javax.swing.event.ChangeListener;
 import pool.Field;
 import resources.AllImage;
 import resources.AllSounds;
+import resources.ColorSet;
 import square.Member;
 import main.Main;
 
 public abstract class GamesFrame extends JFrame{
 	private static final long serialVersionUID = 1L;
-	/**Size of cell*/
-	protected int coubSize = 10;
-	/**Inner size of cell*/
-	protected int coubSizeInner = 6;
-	/**Distance between external side of cell and internal side of cell */
-	protected int coubStep = 2;
-	protected JPanel contentPanel =null;
-	protected Icon slide=AllImage.PICI[0];
-	protected Image scaledImage;
-	private int fieldWidth;
-	private int fieldHeight;
-	private boolean pause = false;
+	private JPanel contentPanel =null;
 	private Timer timer = null;
 	private JMenu menu_1;
 	private JSlider slider;
@@ -53,13 +44,27 @@ public abstract class GamesFrame extends JFrame{
 	private JMenuBar menuBar;
 	private JMenuItem menuItem_1;
 	private Timer timer2 = null;
-	private boolean pici=false;
-	private int slideShowCounter=0;
+	/**Icon for slide show*/
+	protected Icon slide=AllImage.PICI[0];
+	protected Image scaledImage;
+	private int slideShowCounter=0;	
+	/**Size of cell*/
+	protected int coubSize = 10;
+	/**Inner size of cell*/
+	protected int coubSizeInner = 6;
+	/**Distance between external side of cell and internal side of cell */
+	protected int coubStep = 2;
+	private int fieldWidth;
+	private int fieldHeight;
+	private boolean pause = false;
+	private boolean secret=false;
 	private boolean mute = true;
 	protected final int heightConst = 45+20+45;
+	private String pauseStr = "PAUSE";
+	protected Field<Member[][]> field;
 	
 	public boolean isSecretActive() {
-		return this.pici;
+		return this.secret;
 	}
 	public boolean isPause() {
 		return this.pause;
@@ -69,7 +74,9 @@ public abstract class GamesFrame extends JFrame{
 		setResizable(false);
 		this.setJMenuBar(getMenuBar_1());
 		this.setContentPane(getPanel());
-		int scrH=Main.screenSize.height; 
+		Theme1();
+		this.field = field;
+		int scrH=Main.screenSize.height;
 		this.fieldHeight=fieldHeight;//Height of field (count of cell)
 		this.fieldWidth=fieldWidth;// Width of field (count of cell)
 		coubSize =scrH/ fieldHeight-(heightConst/fieldHeight+2); 
@@ -102,7 +109,7 @@ public abstract class GamesFrame extends JFrame{
 						field.up();
 					break;
 				case KeyEvent.VK_DIVIDE:
-					if(pici=!pici)
+					if(secret=!secret)
 						slideShow().start();
 					else
 						slideShow().stop();
@@ -114,13 +121,88 @@ public abstract class GamesFrame extends JFrame{
 					subSize();
 					break;
 				case KeyEvent.VK_SPACE:
-					pause = !Main.snakeFld.pause().isRunning();
+					pause = !field.pause().isRunning();
+					break;
+				case KeyEvent.VK_1:
+					Theme1();
+					break;
+				case KeyEvent.VK_2:
+					Theme2();
+					break;
+				case KeyEvent.VK_3:
+					Theme3();
+					break;
+				case KeyEvent.VK_4:
+					Theme4();
 					break;
 				}
 			}
 		});
 	}
-	protected abstract JPanel getPanel();
+	protected JPanel getPanel(){
+		if(contentPanel==null){
+			contentPanel= new JPanel(){
+				private static final long serialVersionUID = 1L;
+				private final String TITLE = "BONUS";
+				public void paintComponent(Graphics g){
+					super.paintComponent(g);
+					Graphics2D grf = (Graphics2D)g;
+					//if secret was activated
+					if(isSecretActive()){
+						if(scaledImage.getWidth(null)==GamesFrame.this.getWidth() && scaledImage.getHeight(null)==GamesFrame.this.getHeight())
+							grf.drawImage(scaledImage, 0, 0, null);
+						else{
+							scaledImage=scaleImage(slide);
+							grf.drawImage(scaledImage, 0, 0, null);
+						}
+					}
+					Member[][] bitField = field.getField();
+					// draw field
+					for(int i=0;i<bitField[0].length;i++)
+						for(int j=0;j<bitField.length;j++)
+							if(bitField[j][i]!=null)
+								bitField[j][i].insertCell(grf, j*coubSize, i*coubSize, coubSize);
+					// draw score
+					grf.setColor(Color.WHITE);
+					grf.setFont(new Font("Arial", Font.BOLD, 20));
+					grf.drawString("Score: "+field.getScore(), 40,coubSize*bitField[0].length+20);
+					// draw PAUSE
+					if(isPause()){
+						grf.setFont(new Font("Arial", Font.BOLD, 40));
+						grf.drawString(pauseStr, this.getSize().width/2-65,this.getSize().height/2);
+					}
+					// draw name of bonus
+					String bonus = field.getBonusName();
+					if(bonus!=null){
+						grf.setFont(new Font("Arial", Font.BOLD, 40));
+						grf.drawString(TITLE, (this.getSize().width/2)-TITLE.length()*25/2,this.getSize().height/2);
+						grf.drawString(bonus, this.getSize().width/2-bonus.length()*19/2,this.getSize().height/2);
+					}
+					if(getHelpCheckItem().isSelected()){
+						Icon icoHelp = HelpFrame.engineOptimalSel;
+						//black rectangle behind "Help" image
+						grf.setColor(Color.BLACK);
+						grf.fillRect(bitField.length*coubSize, //x
+								0, //y
+								icoHelp.getIconWidth(), //Width
+								bitField[0].length*coubSize+heightConst); // Height
+						// scaling "Help" image
+						Image img =((ImageIcon)icoHelp).getImage();
+						BufferedImage bimage = new BufferedImage(img.getWidth(null), img.getHeight(null), BufferedImage.TYPE_INT_ARGB);
+					    // Draw the image on to the buffered image
+					    Graphics2D bGr = bimage.createGraphics();
+					    bGr.drawImage(img, 0, 0, null);
+					    bGr.dispose();
+						img = bimage.getScaledInstance(icoHelp.getIconWidth(),icoHelp.getIconHeight()<bitField[0].length*coubSize?icoHelp.getIconHeight():bitField[0].length*coubSize, Image.SCALE_FAST);
+						grf.drawImage(img, bitField.length*coubSize, 0, null);
+					}
+				}
+						
+			};
+			
+		}
+		return contentPanel;
+	}
 	protected Timer screenUpdater(){
 		if(timer==null)
 		{
@@ -279,4 +361,28 @@ public abstract class GamesFrame extends JFrame{
 			
 		}
 	};
+	protected void Theme1(){
+		getContentPane().setBackground(Color.BLACK);
+		ColorSet.colorBorder=Color.WHITE;
+		ColorSet.colorFigure=Color.BLUE;
+		ColorSet.colorFieldBorder=Color.RED;
+	}
+	protected void Theme2(){
+		getContentPane().setBackground(Color.LIGHT_GRAY);
+		ColorSet.colorBorder=Color.BLACK;
+		ColorSet.colorFigure=Color.GREEN;
+		ColorSet.colorFieldBorder=Color.MAGENTA;
+	}
+	protected void Theme3(){
+		getContentPane().setBackground(new Color(127,127,127));
+		ColorSet.colorBorder=new Color(0,127,50);
+		ColorSet.colorFigure=new Color(255,156,0);
+		ColorSet.colorFieldBorder=Color.WHITE;
+	}
+	protected void Theme4(){
+		getContentPane().setBackground(Color.DARK_GRAY);
+		ColorSet.colorBorder=Color.PINK;
+		ColorSet.colorFigure=Color.RED;
+		ColorSet.colorFieldBorder=Color.WHITE;
+	}
 }
