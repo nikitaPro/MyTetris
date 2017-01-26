@@ -14,6 +14,7 @@ public class AllImage {
 	public static final Icon BRICK=new ImageIcon(AllImage.class.getResource("/image/brick.jpg"));
 	public static final Icon FIRE=new ImageIcon(AllImage.class.getResource("/image/Bamboo.jpg"));
 	public static final Icon BARK=new ImageIcon(AllImage.class.getResource("/image/Bark.jpg"));
+	public static final Icon METAL=new ImageIcon(AllImage.class.getResource("/image/Metal.jpg"));
 	public static final Icon VOLUME=new ImageIcon(AllImage.class.getResource("/image/volume.png"));
 	public static final Icon MUTE=new ImageIcon(AllImage.class.getResource("/image/mute.png"));
 	public static final Icon HELP=new ImageIcon(AllImage.class.getResource("/image/help.png"));

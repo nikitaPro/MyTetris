@@ -10,5 +10,5 @@ public interface Member {
 	public void moveDown();
 	public int getX();
 	public int getY();
-	public void insertCell(Graphics2D grf, int x, int y, int cellSize);
+	public void draw(Graphics2D grf, int x, int y, int cellSize);
 }

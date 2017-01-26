@@ -6,13 +6,10 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.Timer;
-import javax.swing.border.EmptyBorder;
 import javax.swing.JButton;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
@@ -36,7 +33,6 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GridBagConstraints;
 import java.awt.Font;
-import java.awt.Image;
 import java.awt.Insets;
 import java.io.FileNotFoundException;
 
@@ -48,7 +44,6 @@ import javax.swing.JLabel;
 import javax.swing.ImageIcon;
 
 import main.Main;
-import pool.Field;
 
 public class MainFrame extends JFrame {
 	/**
@@ -78,7 +73,7 @@ public class MainFrame extends JFrame {
 	private JComboBox<String> snakeDiffComboBox;
 	private JComboBox<String> snakeSizeComboBox;
 	private JLabel label_3;
-	private JComboBox comboBox_2;
+	private JComboBox<String> comboBox_2;
 
 	/**
 	 * Create the frame.
@@ -128,9 +123,10 @@ public class MainFrame extends JFrame {
 				public void paintComponent(Graphics g){
 					super.paintComponent(g);
 					Graphics2D grf = (Graphics2D)g;
-					if(i<-1000)i=0;
+					int height=1000;
+					if(i<-height)i=0;
 					i--;
-					scrollEffect(grf,AllImage.FIRE,i);
+					scrollEffect(grf,AllImage.FIRE,i,height);
 				}
 			};
 			springLayout.putConstraint(SpringLayout.WEST, panel, 10, SpringLayout.WEST, contentPane);
@@ -192,7 +188,7 @@ public class MainFrame extends JFrame {
 					showRecords("TETRIS", "Records/Tetris.txt");
 				}
 			});
-			button.setFont(new Font("Tahoma", Font.BOLD | Font.ITALIC, 16));
+			button.setFont(new Font("Old English Text MT", Font.BOLD | Font.ITALIC, 20));
 			button.setIcon(AllImage.RECORDS);
 		}
 		return button;
@@ -213,6 +209,7 @@ public class MainFrame extends JFrame {
 		}
 		return button_1;
 	}
+	/**Difficulty for Tetris*/
 	private JComboBox<String> getComboBox() {
 		if (comboBox == null) {
 			comboBox = new JComboBox<String>();
@@ -308,7 +305,7 @@ public class MainFrame extends JFrame {
 	}
 
 	/**
-	 * difficulty level for Tetris
+	 * Difficulty level for Tetris
 	 * */
 	private JComboBox<String> getComboBox_1() {
 		if (comboBox_1 == null) {
@@ -318,6 +315,7 @@ public class MainFrame extends JFrame {
 		}
 		return comboBox_1;
 	}
+	/**label for tetris*/
 	private JLabel getLabel_1() {
 		if (label_1 == null) {
 			label_1 = new JLabel("Difficulty:");
@@ -331,11 +329,23 @@ public class MainFrame extends JFrame {
 	 * */
 	private JPanel getPanel_1() {
 		if (panel_1 == null) {
-			panel_1 = new JPanel();
+			panel_1 = new JPanel(){
+				private static final long serialVersionUID = 1L;
+				private int i=0;
+				public void paintComponent(Graphics g){
+					super.paintComponent(g);
+					Graphics2D grf = (Graphics2D)g;
+					int height = AllImage.METAL.getIconHeight();
+					if(i<-height)i=0;
+					i--;
+					scrollEffect(grf,AllImage.METAL,i,height);
+				}
+			};
+			panel_1.setBackground(Color.WHITE);
 			springLayout.putConstraint(SpringLayout.WEST, panel_1, 10, SpringLayout.WEST, contentPane);
 			springLayout.putConstraint(SpringLayout.SOUTH, panel_1, -28, SpringLayout.SOUTH, contentPane);
 			springLayout.putConstraint(SpringLayout.EAST, panel_1, 0, SpringLayout.EAST, getPanel());
-			panel_1.setBorder(new TitledBorder(new CompoundBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null), new BevelBorder(BevelBorder.RAISED, null, null, null, null)), "Strike", TitledBorder.LEADING, TitledBorder.TOP, new Font("Old English Text MT", Font.BOLD | Font.ITALIC, 20), null));
+			panel_1.setBorder(new TitledBorder(new CompoundBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null), new BevelBorder(BevelBorder.RAISED, null, null, null, null)), "Strike", TitledBorder.LEADING, TitledBorder.TOP, new Font("Old English Text MT", Font.BOLD | Font.ITALIC, 25), Color.WHITE));
 			GridBagLayout gridBagLayout = new GridBagLayout();
 			gridBagLayout.columnWidths = new int[]{0, 0, 0, 0, 0, 0, 0};
 			gridBagLayout.rowHeights = new int[]{0, 0, 0};
@@ -345,21 +355,15 @@ public class MainFrame extends JFrame {
 			GridBagConstraints gbc = new GridBagConstraints();
 			gbc.gridwidth = 2;
 			gbc.fill = GridBagConstraints.VERTICAL;
-			gbc.insets = new Insets(0, 0, 5, 5);
+			gbc.insets = new Insets(20, 0, 5, 5);
 			gbc.gridx = 0;
 			gbc.gridy = 0;
 			panel_1.add(getButton_3(), gbc);
 			GridBagConstraints gbc_1 = new GridBagConstraints();
-			gbc_1.insets = new Insets(0, 0, 5, 5);
-			gbc_1.gridwidth = 3;
+			gbc_1.insets = new Insets(20, 5, 5, 5);
 			gbc_1.gridx = 2;
 			gbc_1.gridy = 0;
 			panel_1.add(getButton_4(), gbc_1);
-			GridBagConstraints gbc_2 = new GridBagConstraints();
-			gbc_2.insets = new Insets(0, 0, 5, 0);
-			gbc_2.gridx = 5;
-			gbc_2.gridy = 0;
-			panel_1.add(getComboBox_2_1(), gbc_2);
 		}
 		return panel_1;
 	}
@@ -430,6 +434,7 @@ public class MainFrame extends JFrame {
 		timer.start();
 	return timer;
 	}
+	/**Panel for Snake*/
 	private JPanel getPanel_2() {
 		if (panel_2 == null) {
 			panel_2 = new JPanel(){
@@ -438,9 +443,10 @@ public class MainFrame extends JFrame {
 				public void paintComponent(Graphics g){
 					super.paintComponent(g);
 					Graphics2D grf = (Graphics2D)g;
-					if(i<-1000)i=0;
+					int height = AllImage.BARK.getIconHeight();
+					if(i<-height)i=0;
 					i--;
-					scrollEffect(grf,AllImage.BARK,i);
+					scrollEffect(grf,AllImage.BARK,i,height);
 				}
 			};
 			springLayout.putConstraint(SpringLayout.NORTH, getPanel_1(), 6, SpringLayout.SOUTH, panel_2);
@@ -492,13 +498,14 @@ public class MainFrame extends JFrame {
 		}
 		return panel_2;
 	}
-	private int scrollEffect(Graphics2D grf,Icon ico,int i){
-		ico.paintIcon(this, grf, 0, i+999);//установка внизу за экраном
+	private int scrollEffect(Graphics2D grf,Icon ico,int i,int height){
+		ico.paintIcon(this, grf, 0, i+height-1);//установка внизу за экраном
 		//ico.paintIcon(this, grf, 1000, i+999);// справа
 		ico.paintIcon(this, grf, 0, i);//в видимой области
 	//	ico.paintIcon(this, grf, 1000, i);//в видимой области справа(resizable - false - текстура справа за пределом окна)
 	return i;
 	}
+	/**Start button for Snake*/
 	private JButton getButton_5() {
 		if (button_5 == null) {
 			button_5 = new JButton("Start");
@@ -516,15 +523,16 @@ public class MainFrame extends JFrame {
 	 * действие по кнопке START для Snake
 	 * */
 	protected void actionPerformedButton_5(ActionEvent arg0) {
-		switch(snakeSizeComboBox.getSelectedIndex()){//выбираем размер поля из выпадающего списка
+		SnakeField snakeFld ;
+		switch(snakeSizeComboBox.getSelectedIndex()){
 		case 0: 
-			Main.snakeFld = new SnakeField(20,30);
+			snakeFld = new SnakeField(20,30);
 			break;
 		case 1:
-			Main.snakeFld = new SnakeField(26,42);
+			snakeFld = new SnakeField(26,42);
 			break;
 		case 2:
-			Main.snakeFld = new SnakeField(30,50);
+			snakeFld = new SnakeField(30,50);
 			break;
 		default: return;
 		}
@@ -540,9 +548,8 @@ public class MainFrame extends JFrame {
 				new String[]{"GO!"},"GO!")==JOptionPane.CLOSED_OPTION) return;
 		
 		MainFrame.this.setVisible(false);
-		SnakeField fs =Main.snakeFld;
-		final Timer tmr =fs.letsGo();// запускаем игру
-		SnakeFrame sf = new SnakeFrame(fs);// передаем окну поле
+		final Timer tmr =snakeFld.letsGo();// запускаем игру
+		SnakeFrame sf = new SnakeFrame(snakeFld);// передаем окну поле
 		sf.setVisible(true);
 		sf.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
@@ -554,6 +561,7 @@ public class MainFrame extends JFrame {
 			}
 		});
 	}
+	/**Records button for Snake*/
 	private JButton getButton_6() {
 		if (button_6 == null) {
 			button_6 = new JButton("Records");
@@ -562,7 +570,7 @@ public class MainFrame extends JFrame {
 					actionSnakeRecords(arg0);
 				}
 			});
-			button_6.setFont(new Font("Tahoma", Font.BOLD | Font.ITALIC, 16));
+			button_6.setFont(new Font("Old English Text MT", Font.BOLD | Font.ITALIC, 20));
 			button_6.setIcon(AllImage.RECORDS);
 		}
 		return button_6;
@@ -617,14 +625,5 @@ public class MainFrame extends JFrame {
 			label_3.setFont(new Font("Arial", Font.BOLD, 14));
 		}
 		return label_3;
-	}
-	private JComboBox getComboBox_2_1() {
-		if (comboBox_2 == null) {
-			comboBox_2 = new JComboBox();
-			comboBox_2.setFont(new Font("Tahoma", Font.PLAIN, 16));
-			comboBox_2.setModel(new DefaultComboBoxModel<String>(new String[] {"Size: 20x30", "Size: 26x42", "Size: 30x50"}));
-			comboBox_2.setSelectedIndex(0);
-		}
-		return comboBox_2;
 	}
 }

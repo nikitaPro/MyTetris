@@ -161,7 +161,7 @@ public abstract class GamesFrame extends JFrame{
 					for(int i=0;i<bitField[0].length;i++)
 						for(int j=0;j<bitField.length;j++)
 							if(bitField[j][i]!=null)
-								bitField[j][i].insertCell(grf, j*coubSize, i*coubSize, coubSize);
+								bitField[j][i].draw(grf, j*coubSize, i*coubSize, coubSize);
 					// draw score
 					grf.setColor(Color.WHITE);
 					grf.setFont(new Font("Arial", Font.BOLD, 20));

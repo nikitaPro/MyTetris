@@ -58,7 +58,7 @@ public class Square implements Member {
 		throw new UnsupportedOperationException();
 	}
 	@Override
-	public void insertCell(Graphics2D grf, int x, int y, int cellSize ){
+	public void draw(Graphics2D grf, int x, int y, int cellSize ){
 		Color in = ColorSet.colorFigure;
 		Color out = ColorSet.colorBorder;
 		int cellStep = cellSize*20/100;

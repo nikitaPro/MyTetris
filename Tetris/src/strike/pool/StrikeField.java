@@ -14,6 +14,7 @@ import resources.AllSounds;
 import square.BorderSquare;
 import square.Member;
 import square.Square;
+import strike.elements.Bullet;
 import strike.elements.Element;
 import strike.elements.Gun;
 import tetrisPool.Score;
@@ -104,7 +105,7 @@ public class StrikeField implements Field<Member[][]> {
 			stoneDestroy(stone);
 			return;
 		}
-		Element bul = new Element(gun.getX(),gun.getY()-1);
+		Bullet bul = new Bullet(gun.getX(),gun.getY()-1);
 		bullets.add(bul);
 		setPoint(bul);
 	}
