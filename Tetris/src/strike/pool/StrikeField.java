@@ -11,19 +11,22 @@ import javax.swing.Timer;
 
 import pool.Field;
 import resources.AllSounds;
+import score.Score;
 import square.BorderSquare;
 import square.Member;
 import square.Square;
 import strike.elements.Bullet;
 import strike.elements.Element;
 import strike.elements.Gun;
-import tetrisPool.Score;
+import strike.elements.Rocket;
+import strike.elements.Stone;
 
 /**
  * @author NikitaNB
  *
  */
 public class StrikeField implements Field<Member[][]> {
+	private final static String rocketsBonus="ROCKETS"; 
 	private String recordsFilePath = "Records/Strike.txt";
 	private Score score= new Score(recordsFilePath,150); 
 	private Timer timer = score.getTimer();
@@ -33,19 +36,20 @@ public class StrikeField implements Field<Member[][]> {
 	private int startPosition=line-2;
 	private Gun gun ;
 	private ArrayList<Member> bullets;
-	private ArrayList<Member> stones;
+	private ArrayList<Stone> stones;
 	
 	private final int spaceBetweenBullets=1;
 	private int currentSpace;
 	private final int rockfallDelay=15;
 	private int rockfallCounter;
+	private String bonus;
 
 	public StrikeField(){
 		init();
 	}
 	private void init(){
 		bullets= new ArrayList<Member>();
-		stones= new ArrayList<Member>();
+		stones= new ArrayList<Stone>();
 		currentSpace= 0;
 		rockfallCounter= 0;
 		field = new Member[column][line];
@@ -97,15 +101,26 @@ public class StrikeField implements Field<Member[][]> {
 			setPoint(gun);
 		}
 	}
+	private int rocketCount=0;
 	public void fire(){
-		up();
+		moveBulletup();
 		Member stone = field[gun.getX()][gun.getY()-1];
-		//if there are situation when under bullet exist stone 
+		//if there is situation when under bullet exist stone 
 		if(stone!=null){
 			stoneDestroy(stone);
 			return;
 		}
-		Bullet bul = new Bullet(gun.getX(),gun.getY()-1);
+		Bullet bul;
+		if(rocketCount!=0){
+			AllSounds.rocketStart.multyPlay();
+			bul = new Rocket(gun.getX(),gun.getY()-1);
+			rocketCount--;
+			if(rocketCount==8)bonus=null;
+		}
+		else {
+			AllSounds.shot.multyPlay();
+			bul = new Bullet(gun.getX(),gun.getY()-1);
+		}
 		bullets.add(bul);
 		setPoint(bul);
 	}
@@ -124,14 +139,14 @@ public class StrikeField implements Field<Member[][]> {
 			currentSpace=spaceBetweenBullets;
 		}
 		else{
-			up();
+			moveBulletup();
 			currentSpace--;
 		}
 		for(int i=0;i<bullets.size();i++){
 			if(collision(bullets.get(i)))i--;
 		}
 		if(rockfallCounter==0){
-			down();
+			stonesFallDown();
 			rockfallCounter=rockfallDelay;
 		}
 		else{
@@ -148,7 +163,13 @@ public class StrikeField implements Field<Member[][]> {
 			if(mem!=null){
 				bullets.remove(bullet);
 				delPoint(bullet);
-				if(mem instanceof BorderSquare){
+				if(bullet instanceof Rocket){
+					AllSounds.rocketBoom.multyPlay();
+					for(int i=bullet.getX()-1;i<=bullet.getX()+1;i++){
+						for(int j=bullet.getY()-1;j<=bullet.getY()+1;j++){
+							stoneDestroy(field[i][j]);
+						}
+					}
 					return true;
 				}
 				Member stone = field[bullet.getX()][bullet.getY()-1];
@@ -162,16 +183,30 @@ public class StrikeField implements Field<Member[][]> {
 		return false;
 	}
 	private void stoneDestroy(Member stone){
+		if(stone==null)return;
+		if(!(stone instanceof Stone)){
+			AllSounds.ricochet.multyPlay();
+			return;
+		}
 		delPoint(stone);
 		stones.remove(stone);
+		AllSounds.stoneDestroy.multyPlay();
 		collisionCount++;
 		if(collisionCount==column){
 			score.addScore();
 			collisionCount=0;
+			if(score.getScore()%10==0){
+				AllSounds.rocketsBonus.play();
+				bonus=rocketsBonus;
+				rocketCount=10;
+			}
 		}
 	}
 	@Override
-	public void up() {
+	public void up(){
+		return;
+	}
+	private void moveBulletup() {
 		for(int i =0;i<bullets.size();i++){
 			delPoint(bullets.get(i));
 			bullets.get(i).moveUp();
@@ -180,6 +215,9 @@ public class StrikeField implements Field<Member[][]> {
 	}
 	@Override
 	public void down() {
+		return;
+	}
+	public void stonesFallDown() {
 		for(int i =0;i<stones.size();i++){
 			Member mem = stones.get(i);
 			delPoint(mem);
@@ -190,7 +228,7 @@ public class StrikeField implements Field<Member[][]> {
 		Random generator = new Random(); 
 		for(int i=1;i<column-1;i++){
 			if(generator.nextBoolean()){
-				Element stone=new Element(i,1);
+				Stone stone=new Stone(i,1);
 				field[i][1]=stone;
 				stones.add(stone);
 			}
@@ -207,12 +245,12 @@ public class StrikeField implements Field<Member[][]> {
 			AllSounds.GOverSnd.stop();
 		}
 		else{
-			AllSounds.Winner.play();
+			AllSounds.winner.play();
 			JOptionPane.showMessageDialog(null, 
 				"YOU ARE FUCKING WINNER", 
 				"WIN", 
 				JOptionPane.INFORMATION_MESSAGE);
-			AllSounds.Winner.stop();
+			AllSounds.winner.stop();
 			}
 		score.setRecord();
 		timer=score.resetDiff();
@@ -228,7 +266,6 @@ public class StrikeField implements Field<Member[][]> {
 	}
 	@Override
 	public String getBonusName() {
-		// TODO Auto-generated method stub
-		return null;
+		return bonus;
 	}
 }

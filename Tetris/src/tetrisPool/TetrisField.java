@@ -17,6 +17,7 @@ import javax.swing.JOptionPane;
 import javax.swing.Timer;
 
 import pool.Field;
+import score.Score;
 import square.BorderSquare;
 import square.Figure;
 import square.Member;
@@ -330,7 +331,7 @@ public class TetrisField implements Field<Member [][]> {
 							JOptionPane.INFORMATION_MESSAGE);
 				}
 				else{
-					AllSounds.Winner.play();
+					AllSounds.winner.play();
 					JOptionPane.showMessageDialog(null, 
 							"YOU ARE FUCKING WINNER", 
 							"WIN", 

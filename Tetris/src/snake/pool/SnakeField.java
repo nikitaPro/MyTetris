@@ -13,6 +13,7 @@ import javax.swing.JOptionPane;
 import javax.swing.Timer;
 
 import pool.Field;
+import score.Score;
 import snake.body.Apple;
 import snake.body.Head;
 import snake.body.Segment;
@@ -20,7 +21,6 @@ import snake.body.Soft;
 import square.BorderSquare;
 import square.Member;
 import square.Square;
-import tetrisPool.Score;
 
 /**
  * @author NikitaNB
@@ -62,7 +62,7 @@ public class SnakeField implements Field<Member[][] > {
 		init();
 	}
 	private void init(){
-		setDfficulty(400);
+		setDifficulty(400);
 		field = new Member[column][line];
 		for(int i=0;i<line;i++){
 			field[column-1][i]=new BorderSquare(column-1,i);
@@ -77,7 +77,7 @@ public class SnakeField implements Field<Member[][] > {
 	}
 	/**@param diff - Time in ms before next action start.
 	 * It is set by default - 400ms */
-	public void setDfficulty(int diff){
+	public void setDifficulty(int diff){
 		score = new Score(recordsFilePath,diff);
 		timer = score.getTimer();
 		timer.addActionListener(new java.awt.event.ActionListener() {
@@ -176,7 +176,7 @@ public class SnakeField implements Field<Member[][] > {
 	}
 	@Override
 	public void go(){
-		AllSounds.Shoroh.play();
+		AllSounds.shoroh.play();
 		if(collisionCheck()){ 
 			return;
 		}
@@ -241,12 +241,12 @@ public class SnakeField implements Field<Member[][] > {
 			AllSounds.GOverSnd.stop();
 		}
 		else{
-			AllSounds.Winner.play();
+			AllSounds.winner.play();
 			JOptionPane.showMessageDialog(null, 
 				"YOU ARE FUCKING WINNER", 
 				"WIN", 
 				JOptionPane.INFORMATION_MESSAGE);
-			AllSounds.Winner.stop();
+			AllSounds.winner.stop();
 			}
 		score.setRecord();
 		timer=score.resetDiff();
@@ -266,7 +266,7 @@ public class SnakeField implements Field<Member[][] > {
 		applePartyCounter=0;
 	}
 	private void eat(Apple apple,Head snake){
-		AllSounds.Hrum.play();
+		AllSounds.hrum.play();
 		scoreVal=score.addScore();
 		currentDir = direction;
 		this.snake=new Head(apple.getX(),apple.getY(),direction);

@@ -176,7 +176,7 @@ public abstract class GamesFrame extends JFrame{
 					if(bonus!=null){
 						grf.setFont(new Font("Arial", Font.BOLD, 40));
 						grf.drawString(TITLE, (this.getSize().width/2)-TITLE.length()*25/2,this.getSize().height/2);
-						grf.drawString(bonus, this.getSize().width/2-bonus.length()*19/2,this.getSize().height/2);
+						grf.drawString(bonus, this.getSize().width/2-bonus.length()*19/2,this.getSize().height/2+40);
 					}
 					if(getHelpCheckItem().isSelected()){
 						Icon icoHelp = HelpFrame.engineOptimalSel;

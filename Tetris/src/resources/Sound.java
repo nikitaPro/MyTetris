@@ -8,7 +8,6 @@ package resources;
  *
  */
 import java.io.BufferedInputStream;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -21,18 +20,17 @@ import javax.sound.sampled.LineListener;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
-public class Sound {
+public class Sound implements Cloneable{
 	private boolean released = false;
 	private Clip clip = null;
 	private FloatControl volumeC = null;
 	private boolean playing = false;
+	private String path;
 	
-	public Sound(String s) {
-		init(s);
+	public Sound(String path) {
+		this.path=path;
+		init(path);
 	}
-	/*public Sound(File f){
-		init(f);
-	}*/
 	private void init(String s){
 		try {
 			InputStream is= getClass().getResourceAsStream(s);
@@ -86,6 +84,11 @@ public class Sound {
 	public void playWithoutBreak(){
 		play(false);
 	}
+	public void multyPlay(){
+		Sound sound = new Sound (path);
+		sound.setVolume(sound.getVolume());
+		sound.play();
+	}
 	/**Останавливает воспроизведение*/
 	public void stop() {
 		if (playing) {
@@ -124,7 +127,6 @@ public class Sound {
 	
 	/**Статический метод, для удобства*/
 	public static Sound playSound(String s) {
-		File f = new File(s);
 		Sound snd = new Sound(s);
 		snd.play();
 		return snd;

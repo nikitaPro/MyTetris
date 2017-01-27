@@ -1,7 +1,7 @@
 /**
  * 
  */
-package tetrisPool;
+package score;
 
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -80,7 +80,7 @@ public class Score {
 			return;
 		}
 		record.add(name);
-		record.add(score+"");
+		record.add(String.valueOf(score));
 		sort(record);
 		if(record.size()==8){
 			int r=6;

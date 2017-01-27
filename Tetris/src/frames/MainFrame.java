@@ -252,19 +252,20 @@ public class MainFrame extends JFrame {
 	 * Action START for Tetris
 	 * */
 	protected void actionPerformedButton_1(ActionEvent e) {
-		switch(comboBox.getSelectedIndex()){//выбираем размер поля из выпадающего списка
+		TetrisField tetrisFld;
+		switch(comboBox.getSelectedIndex()){//choose the field size
 		case 0: 
-			Main.tetrisFld = new TetrisField(20,30);
+			tetrisFld = new TetrisField(20,30);
 			break;
 		case 1:
-			Main.tetrisFld = new TetrisField(26,42);
+			tetrisFld = new TetrisField(26,42);
 			break;
 		case 2:
-			Main.tetrisFld = new TetrisField(30,50);
+			tetrisFld = new TetrisField(30,50);
 			break;
 		default: return;
 		}
-		// спрашиваем пользователя о готовности если окно закрыл то выход из обработчика
+		// ask the user about ready if he close frame then exit from method
 		if(JOptionPane.showOptionDialog(MainFrame.this, 
 				"                         ARE YOU READY?", 
 				"Start", 
@@ -273,29 +274,14 @@ public class MainFrame extends JFrame {
 				null,
 				new String[]{"GO!"},"GO!")==JOptionPane.CLOSED_OPTION) return;
 		
-		MainFrame.this.setVisible(false);//скрыть гл меню
-		TetrisFrame tf = new TetrisFrame(Main.tetrisFld);// передаем окну поле
+		MainFrame.this.setVisible(false);//hide main menu
+		TetrisFrame tf = new TetrisFrame(tetrisFld);
+		tetrisFld.setDfficulty(400-80*comboBox_1.getSelectedIndex());
 		
-		switch(comboBox_1.getSelectedIndex()){// выбираем сложность 
-		case 0: 
-			Main.tetrisFld.setDfficulty(400);// 400 мс до сдвига фигуры вниз
-			break;
-		case 1:
-			Main.tetrisFld.setDfficulty(320);
-			break;
-		case 2:
-			Main.tetrisFld.setDfficulty(240);
-			break;
-		case 3:
-			Main.tetrisFld.setDfficulty(160);
-			break;
-		default: return;
-		}
-		
-		final Timer tmr =Main.tetrisFld.letsGo();// запускаем игру
+		final Timer tmr =tetrisFld.letsGo();// start game
 		tf.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
-				//при закрытии остановка таймера, уничтожение окна возврат в гл меню 
+				//if close - stop timer, destroy frame and go back main menu 
 				tmr.stop();
 				tf.setVisible(false);
 				tf.dispose();
@@ -345,7 +331,7 @@ public class MainFrame extends JFrame {
 			springLayout.putConstraint(SpringLayout.WEST, panel_1, 10, SpringLayout.WEST, contentPane);
 			springLayout.putConstraint(SpringLayout.SOUTH, panel_1, -28, SpringLayout.SOUTH, contentPane);
 			springLayout.putConstraint(SpringLayout.EAST, panel_1, 0, SpringLayout.EAST, getPanel());
-			panel_1.setBorder(new TitledBorder(new CompoundBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null), new BevelBorder(BevelBorder.RAISED, null, null, null, null)), "Strike", TitledBorder.LEADING, TitledBorder.TOP, new Font("Old English Text MT", Font.BOLD | Font.ITALIC, 25), Color.WHITE));
+			panel_1.setBorder(new TitledBorder(new CompoundBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null), new BevelBorder(BevelBorder.RAISED, null, null, null, null)), "Strike", TitledBorder.LEADING, TitledBorder.TOP, new Font("Tahoma", Font.BOLD, 25), Color.WHITE));
 			GridBagLayout gridBagLayout = new GridBagLayout();
 			gridBagLayout.columnWidths = new int[]{0, 0, 0, 0, 0, 0, 0};
 			gridBagLayout.rowHeights = new int[]{0, 0, 0};
@@ -355,12 +341,12 @@ public class MainFrame extends JFrame {
 			GridBagConstraints gbc = new GridBagConstraints();
 			gbc.gridwidth = 2;
 			gbc.fill = GridBagConstraints.VERTICAL;
-			gbc.insets = new Insets(20, 0, 5, 5);
+			gbc.insets = new Insets(17, 0, 5, 5);
 			gbc.gridx = 0;
 			gbc.gridy = 0;
 			panel_1.add(getButton_3(), gbc);
 			GridBagConstraints gbc_1 = new GridBagConstraints();
-			gbc_1.insets = new Insets(20, 5, 5, 5);
+			gbc_1.insets = new Insets(17, 5, 5, 5);
 			gbc_1.gridx = 2;
 			gbc_1.gridy = 0;
 			panel_1.add(getButton_4(), gbc_1);
@@ -390,13 +376,13 @@ public class MainFrame extends JFrame {
 					actionPerformedButton_4(arg0);
 				}
 			});
-			button_4.setFont(new Font("Old English Text MT", Font.BOLD | Font.ITALIC, 20));
+			button_4.setFont(new Font("Tahoma", Font.BOLD, 20));
 			button_4.setIcon(AllImage.STRIKE);
 		}
 		return button_4;
 	}
 	/**
-	 * действие по кнопке START для Strike
+	 * action on button START for Strike
 	 * */
 	protected void actionPerformedButton_4(ActionEvent arg0) {
 		if(JOptionPane.showOptionDialog(MainFrame.this, 
@@ -421,7 +407,7 @@ public class MainFrame extends JFrame {
 			}
 		});
 	}
-	/** Анимация главного меню*/
+	/** Animation main menu*/
 	private Timer Animation(){
 		if(timer==null)
 		{
@@ -499,11 +485,9 @@ public class MainFrame extends JFrame {
 		return panel_2;
 	}
 	private int scrollEffect(Graphics2D grf,Icon ico,int i,int height){
-		ico.paintIcon(this, grf, 0, i+height-1);//установка внизу за экраном
-		//ico.paintIcon(this, grf, 1000, i+999);// справа
-		ico.paintIcon(this, grf, 0, i);//в видимой области
-	//	ico.paintIcon(this, grf, 1000, i);//в видимой области справа(resizable - false - текстура справа за пределом окна)
-	return i;
+		ico.paintIcon(this, grf, 0, i+height-1);//set under a show area
+		ico.paintIcon(this, grf, 0, i);//in shown area 
+		return i;
 	}
 	/**Start button for Snake*/
 	private JButton getButton_5() {
@@ -520,7 +504,7 @@ public class MainFrame extends JFrame {
 		return button_5;
 	}	
 	/**
-	 * действие по кнопке START для Snake
+	 * action button START for Snake
 	 * */
 	protected void actionPerformedButton_5(ActionEvent arg0) {
 		SnakeField snakeFld ;
@@ -536,9 +520,9 @@ public class MainFrame extends JFrame {
 			break;
 		default: return;
 		}
-		// выбираем сложность 
-		Main.snakeFld.setDfficulty(400-80*snakeDiffComboBox.getSelectedIndex());// 400 мс до сдвига фигуры вниз
-		// спрашиваем пользователя о готовности если окно закрыл то выход из обработчика
+		// choose difficulty
+		snakeFld.setDifficulty(400-80*snakeDiffComboBox.getSelectedIndex());// 400 мс до сдвига фигуры вниз
+		// ask the user about ready if he close frame then exit from method
 		if(JOptionPane.showOptionDialog(MainFrame.this, 
 				"                         ARE YOU READY?", 
 				"Start", 
@@ -548,12 +532,12 @@ public class MainFrame extends JFrame {
 				new String[]{"GO!"},"GO!")==JOptionPane.CLOSED_OPTION) return;
 		
 		MainFrame.this.setVisible(false);
-		final Timer tmr =snakeFld.letsGo();// запускаем игру
-		SnakeFrame sf = new SnakeFrame(snakeFld);// передаем окну поле
+		final Timer tmr =snakeFld.letsGo();// start the game
+		SnakeFrame sf = new SnakeFrame(snakeFld);
 		sf.setVisible(true);
 		sf.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
-				//при закрытии остановка таймера, уничтожение окна возврат в гл меню 
+				//if close - stop timer, destroy frame and go back main menu 
 				tmr.stop();
 				sf.setVisible(false);
 				sf.dispose();
@@ -607,6 +591,7 @@ public class MainFrame extends JFrame {
 		}
 		return snakeDiffComboBox;
 	}
+	/**Field size for snake*/
 	private JComboBox<String> getComboBox_3() {
 		if (snakeSizeComboBox == null) {
 			snakeSizeComboBox = new JComboBox<String>();
