@@ -50,10 +50,6 @@ public abstract class GamesFrame extends JFrame{
 	private int slideShowCounter=0;	
 	/**Size of cell*/
 	protected int coubSize = 10;
-	/**Inner size of cell*/
-	protected int coubSizeInner = 6;
-	/**Distance between external side of cell and internal side of cell */
-	protected int coubStep = 2;
 	private int fieldWidth;
 	private int fieldHeight;
 	private boolean pause = false;
@@ -81,8 +77,6 @@ public abstract class GamesFrame extends JFrame{
 		this.fieldWidth=fieldWidth;// Width of field (count of cell)
 		coubSize =scrH/ fieldHeight-(heightConst/fieldHeight+2); 
 		if(coubSize%2==1) coubSize+=1;
-		coubSizeInner =coubSize-coubSize*45/100; 
-		coubStep = (coubSize-coubSizeInner)/2; 
 		this.setSize(fieldWidth*coubSize+6,fieldHeight*coubSize+heightConst );
 		this.setLocation(Main.screenSize.width/2-this.getSize().width/2, Main.screenSize.height/2-this.getSize().height/2-25);
 		timer=screenUpdater();
@@ -233,8 +227,6 @@ public abstract class GamesFrame extends JFrame{
 		helpItem.setSelected(false);
 		if(fieldHeight*coubSize*2+heightConst<=Main.screenSize.getHeight()){
 			coubSize*=2;
-			coubSizeInner =coubSize-coubSize*45/100; // внутренний размиер квадратика €чейки
-			coubStep = (coubSize-coubSizeInner)/2; // рассто€ние от кра€ €чейки до кра€ внутреннего квадрата
 			this.setSize(fieldWidth*coubSize+6,fieldHeight*coubSize+heightConst);
 		}
 	}
@@ -242,8 +234,6 @@ public abstract class GamesFrame extends JFrame{
 		helpItem.setSelected(false);
 		if(coubSize<=10) return;
 		coubSize/=2;
-		coubSizeInner =coubSize-coubSize*45/100; // внутренний размиер квадратика €чейки
-		coubStep = (coubSize-coubSizeInner)/2; // рассто€ние от кра€ €чейки до кра€ внутреннего квадрата
 		this.setSize(fieldWidth*coubSize+6,fieldHeight*coubSize+heightConst );
 	}
 

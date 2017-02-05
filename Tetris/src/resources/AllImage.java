@@ -19,6 +19,8 @@ public class AllImage {
 	public static final Icon MUTE=new ImageIcon(AllImage.class.getResource("/image/mute.png"));
 	public static final Icon HELP=new ImageIcon(AllImage.class.getResource("/image/help.png"));
 	public static final Icon engineOptimalSel=new ImageIcon(AllImage.class.getResource("/help.png"));
+	public static final Icon HERO_TANK=new ImageIcon(AllImage.class.getResource("/image/Tank.png"));
+	public static final Icon SHELL = new ImageIcon(AllImage.class.getResource("/image/Shell.png"));
 	/*public static final Icon PICI[]= { 
 		new ImageIcon(AllImage.class.getResource("/image/O/pici.pcp")),
 		new ImageIcon(AllImage.class.getResource("/image/O/pici6.pcp")),

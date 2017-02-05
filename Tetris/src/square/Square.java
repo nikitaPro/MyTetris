@@ -61,7 +61,9 @@ public class Square implements Member {
 	public void draw(Graphics2D grf, int x, int y, int cellSize ){
 		Color in = ColorSet.colorFigure;
 		Color out = ColorSet.colorBorder;
+		/*Distance between external side of cell and internal side of cell */
 		int cellStep = cellSize*20/100;
+		/*Inner size of cell*/
 		int cellSizeInner = cellSize-2*cellStep;
 		grf.setColor(out);
 		grf.fillRect(x, y, cellSize, cellSize);

@@ -25,6 +25,7 @@ import resources.AllImage;
 import resources.FileWorker;
 import snake.pool.SnakeField;
 import strike.pool.StrikeField;
+import tanks.tankField.TankField;
 import tetrisPool.TetrisField;
 
 import java.awt.Color;
@@ -74,6 +75,8 @@ public class MainFrame extends JFrame {
 	private JComboBox<String> snakeSizeComboBox;
 	private JLabel label_3;
 	private JComboBox<String> comboBox_2;
+	private JPanel panelTank;
+	private JButton buttonTankStart;
 
 	/**
 	 * Create the frame.
@@ -83,7 +86,7 @@ public class MainFrame extends JFrame {
 	}
 		
 	private void initGUI() {
-		setSize(new Dimension(width, height));
+		setSize(new Dimension(460, 650));
 		this.setIconImage(Toolkit.getDefaultToolkit().getImage(MainFrame.class.getResource("/image/ico.png")));
 		this.setTitle("Tetris games");
 		this.setLocation(screenSize.width/2-width/2, screenSize.height/2-height/2);
@@ -113,6 +116,7 @@ public class MainFrame extends JFrame {
 		contentPane.add(getPanel_1());
 		contentPane.add(getPanel_2());
 		contentPane.add(getLabel_3());
+		contentPane.add(getPanelTank());
 	}
 	/**Panel for Tetris*/
 	private JPanel getPanel() {
@@ -130,7 +134,7 @@ public class MainFrame extends JFrame {
 				}
 			};
 			springLayout.putConstraint(SpringLayout.WEST, panel, 10, SpringLayout.WEST, contentPane);
-			springLayout.putConstraint(SpringLayout.SOUTH, panel, -300, SpringLayout.SOUTH, contentPane);
+			springLayout.putConstraint(SpringLayout.SOUTH, panel, -430, SpringLayout.SOUTH, contentPane);
 			springLayout.putConstraint(SpringLayout.EAST, panel, -10, SpringLayout.EAST, contentPane);
 			panel.setBackground(Color.RED);
 			panel.setFont(new Font("Tahoma", Font.BOLD, 15));
@@ -327,10 +331,10 @@ public class MainFrame extends JFrame {
 					scrollEffect(grf,AllImage.METAL,i,height);
 				}
 			};
+			springLayout.putConstraint(SpringLayout.WEST, panel_1, 0, SpringLayout.WEST, getPanel());
+			springLayout.putConstraint(SpringLayout.SOUTH, panel_1, -158, SpringLayout.SOUTH, contentPane);
+			springLayout.putConstraint(SpringLayout.EAST, panel_1, -10, SpringLayout.EAST, contentPane);
 			panel_1.setBackground(Color.WHITE);
-			springLayout.putConstraint(SpringLayout.WEST, panel_1, 10, SpringLayout.WEST, contentPane);
-			springLayout.putConstraint(SpringLayout.SOUTH, panel_1, -28, SpringLayout.SOUTH, contentPane);
-			springLayout.putConstraint(SpringLayout.EAST, panel_1, 0, SpringLayout.EAST, getPanel());
 			panel_1.setBorder(new TitledBorder(new CompoundBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null), new BevelBorder(BevelBorder.RAISED, null, null, null, null)), "Strike", TitledBorder.LEADING, TitledBorder.TOP, new Font("Tahoma", Font.BOLD, 25), Color.WHITE));
 			GridBagLayout gridBagLayout = new GridBagLayout();
 			gridBagLayout.columnWidths = new int[]{0, 0, 0, 0, 0, 0, 0};
@@ -438,7 +442,7 @@ public class MainFrame extends JFrame {
 			springLayout.putConstraint(SpringLayout.NORTH, getPanel_1(), 6, SpringLayout.SOUTH, panel_2);
 			springLayout.putConstraint(SpringLayout.NORTH, panel_2, 6, SpringLayout.SOUTH, getPanel());
 			springLayout.putConstraint(SpringLayout.WEST, panel_2, 0, SpringLayout.WEST, getPanel());
-			springLayout.putConstraint(SpringLayout.SOUTH, panel_2, -164, SpringLayout.SOUTH, contentPane);
+			springLayout.putConstraint(SpringLayout.SOUTH, panel_2, -294, SpringLayout.SOUTH, contentPane);
 			springLayout.putConstraint(SpringLayout.EAST, panel_2, -10, SpringLayout.EAST, contentPane);
 			panel_2.setBackground(new Color(46, 139, 87));
 			panel_2.setFont(new Font("Tahoma", Font.BOLD, 15));
@@ -610,5 +614,76 @@ public class MainFrame extends JFrame {
 			label_3.setFont(new Font("Arial", Font.BOLD, 14));
 		}
 		return label_3;
+	}
+	private JPanel getPanelTank() {
+		if (panelTank == null) {
+			panelTank = new JPanel();
+			panelTank.setBorder(new CompoundBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null), new BevelBorder(BevelBorder.RAISED, null, null, null, null)));
+			springLayout.putConstraint(SpringLayout.NORTH, panelTank, 6, SpringLayout.SOUTH, getPanel_1());
+			springLayout.putConstraint(SpringLayout.WEST, panelTank, 0, SpringLayout.WEST, getPanel());
+			springLayout.putConstraint(SpringLayout.SOUTH, panelTank, 136, SpringLayout.SOUTH, getPanel_1());
+			springLayout.putConstraint(SpringLayout.EAST, panelTank, 0, SpringLayout.EAST, getPanel());
+			GridBagLayout gridBagLayout = new GridBagLayout();
+			gridBagLayout.columnWidths = new int[]{0, 0, 0, 0, 0};
+			gridBagLayout.rowHeights = new int[]{0, 0, 0};
+			gridBagLayout.columnWeights = new double[]{0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+			gridBagLayout.rowWeights = new double[]{0.0, 0.0, Double.MIN_VALUE};
+			panelTank.setLayout(gridBagLayout);
+			GridBagConstraints gbc = new GridBagConstraints();
+			gbc.gridx = 3;
+			gbc.gridy = 1;
+			panelTank.add(getButtonTankStart(), gbc);
+		}
+		return panelTank;
+	}
+	private JButton getButtonTankStart() {
+		if (buttonTankStart == null) {
+			buttonTankStart = new JButton("Start");
+			buttonTankStart.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent arg0) {
+					actionPerformedButtonTankStart(arg0);
+				}
+			});
+		}
+		return buttonTankStart;
+	}
+	protected void actionPerformedButtonTankStart(ActionEvent arg0) {
+		TankField tankFld = new TankField(40,24);
+		/*switch(snakeSizeComboBox.getSelectedIndex()){
+		case 0: 
+			snakeFld = new SnakeField(20,30);
+			break;
+		case 1:
+			snakeFld = new SnakeField(26,42);
+			break;
+		case 2:
+			snakeFld = new SnakeField(30,50);
+			break;
+		default: return;
+		}*/
+		// choose difficulty
+		//tankFld.setDifficulty(400-80*0);// 400 мс до сдвига фигуры вниз
+		// ask the user about ready if he close frame then exit from method
+		if(JOptionPane.showOptionDialog(MainFrame.this, 
+				"                         ARE YOU READY?", 
+				"Start", 
+				JOptionPane.INFORMATION_MESSAGE,
+				JOptionPane.DEFAULT_OPTION,
+				null,
+				new String[]{"GO!"},"GO!")==JOptionPane.CLOSED_OPTION) return;
+		
+		MainFrame.this.setVisible(false);
+		final Timer tmr =tankFld.letsGo();// start the game
+		TankFrame sf = new TankFrame(tankFld);
+		sf.setVisible(true);
+		sf.addWindowListener(new WindowAdapter() {
+			public void windowClosing(WindowEvent e) {
+				//if close - stop timer, destroy frame and go back main menu 
+				tmr.stop();
+				sf.setVisible(false);
+				sf.dispose();
+				MainFrame.this.setVisible(true);
+			}
+		});
 	}
 }

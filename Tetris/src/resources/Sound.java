@@ -10,6 +10,7 @@ package resources;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
@@ -84,10 +85,22 @@ public class Sound implements Cloneable{
 	public void playWithoutBreak(){
 		play(false);
 	}
+	private ArrayList<Sound> sounds = new ArrayList<Sound>();
 	public void multyPlay(){
-		Sound sound = new Sound (path);
-		sound.setVolume(sound.getVolume());
+		Sound sound;
+		for(int i=0;i<sounds.size();i++){
+			sound=sounds.get(i);
+			if(sounds.get(i).isPlaying()) continue;
+			else{
+				sound.setVolume(this.getVolume());
+				sound.play();
+				return;
+			}
+		}
+		sound = new Sound (path);
+		sound.setVolume(this.getVolume());
 		sound.play();
+		sounds.add(sound);
 	}
 	/**Останавливает воспроизведение*/
 	public void stop() {
